@@ -43,6 +43,25 @@ namespace ExpediaTest
 			var target = new Car(7);
 			Assert.AreEqual(10*7*.8, target.getBasePrice());
 		}
+
+        [TestMethod()]
+        public void TestThatCarIsParkedInRightSpot()
+        {
+        IDatabase mockDB = mocks.StrictMock<IDatabase>();
+        String carLocation = "SRC Lot";
+        String anotherCarLocation = "Home";
+        Expect.Call(mockDB.getCarLocation(5)).Return(carLocation);
+        Expect.Call(mockDB.getCarLocation(1025)).Return(anotherCarLocation);
+        mocks.ReplayAll();
+        Car target = ObjectMother.BMW();        target.Database = mockDB;
+        String result;
+        result = target.getCarLocation(1025);
+        Assert.AreEqual(anotherCarLocation, result);
+        result = target.getCarLocation(5);
+        Assert.AreEqual(carLocation, result);
+        mocks.VerifyAll();
+        }
+
 		
 		[TestMethod]
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
